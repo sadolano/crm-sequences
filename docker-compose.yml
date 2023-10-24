@@ -1,0 +1,41 @@
+################################################################################
+# Node-RED Stack or Compose
+################################################################################
+# docker stack deploy node-red --compose-file docker-compose-node-red.yml
+# docker-compose -f docker-compose-node-red.yml -p myNoderedProject up
+################################################################################
+version: '3.7'
+
+services:
+    rabbitmq:
+        image: rabbitmq:3.12.7-management-alpine
+        container_name: 'rabbitmq'
+        environment:
+            - RABBITMQ_DEFAULT_USER=guest
+            - RABBITMQ_DEFAULT_PASS=guest
+        ports:        
+            - 5672:5672
+            - 15672:15672
+        volumes:
+            - C:\Users\doerr\Documents\development\crm-sequences\rabbit-mq\data:/var/lib/rabbitmq/
+            - C:\Users\doerr\Documents\development\crm-sequences\rabbit-mq\logs:/var/log/rabbitmq
+        networks:
+            - rabbitmq_net
+
+    node-red:
+        image: nodered/node-red:latest
+        environment:
+            - TZ=Europe/Amsterdam
+        ports:
+            - '1880:1880'
+        networks:
+            - node-red-net
+        volumes:
+            - C:\Users\doerr\Documents\development\crm-sequences\node-red\data:/data
+
+volumes:
+    node-red-data:
+
+networks:
+    node-red-net:
+    rabbitmq_net:
